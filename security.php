@@ -77,39 +77,40 @@ if (isset($_GET)) {
 //Anti injection on $_SESSION methods (if you need)
 //if (isset($_SESSION)) {
 //    foreach($_SESSION as $field=>$value) {
-//        $_SESSION[$filed]=addslashes($value);
+//        $_SESSION[$filed]=mysql_real_escape_string($value);
 //    }
 //}
-
 //Prevent .php file upload
 if (isset($_FILES)) {
-    foreach ($_FILES as $field => $value) {
-        $name = $_FILES[$field]['name'];
-        $x = explode('.', $name);
-        $ext = end($x);
-        $extension = mb_strtolower($ext, 'UTF-8');
-        if ($extension == 'php') {
-            //change the extension to prevent .php executable files
-            $_FILES[$field]['name'] = str_replace('.' . $ext, '', $name) . '.php-sended';
+    foreach ($_FILES as $files) {
+        foreach ($files as $field=>$array) {
+            $name = $files[$field]['name'];
+            $x = explode('.', $name);
+            $ext = end($x);
+            $extension = mb_strtolower($ext, 'UTF-8');
+            if ($extension == 'php') {
+                //change the extension to prevent .php executable files
+                $_FILES[$field]['name'] = str_replace('.' . $ext, '', $name) . '.php-sended';
+            }
         }
     }
 }
 
-$flood_count=0;
+$flood_count = 0;
 //if have repeated post or get strings
-if (!empty($_SESSION['last_flood_string']) and $_SESSION['last_flood_string']==$flood_string) {
-    if ($_SESSION['flood_string_date']<=date('Y-m-d H:i:s',strtotime('-1 second'))) {
+if (!empty($_SESSION['last_flood_string']) and $_SESSION['last_flood_string'] == $flood_string) {
+    if ($_SESSION['flood_string_date'] <= date('Y-m-d H:i:s', strtotime('-1 second'))) {
         $flood_count++;
     }
-    $_SESSION['flood_string_date']=date('Y-m-d H:i:s');
+    $_SESSION['flood_string_date'] = date('Y-m-d H:i:s');
 } else {
-    $flood_count=0;
+    $flood_count = 0;
 }
 
-if ($flood_count>=1) {
+if ($flood_count >= 1) {
     //anti Ddos / anti flood
     //interrupt the page execution
     exit;
 }
 
-$_SESSION['last_flood_string']=$flood_string;
+$_SESSION['last_flood_string'] = $flood_string;
