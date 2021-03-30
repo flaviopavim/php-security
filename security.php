@@ -61,7 +61,7 @@ $flood_string = '';
 //Anti injection on $_POST methods
 if (isset($_POST)) {
     foreach ($_POST as $field => $value) {
-        $_POST[$filed] = mysql_real_escape_string($value);
+        $_POST[$filed] = addslashes($value);
         $flood_string .= $_POST[$filed];
     }
 }
@@ -69,7 +69,7 @@ if (isset($_POST)) {
 //Anti injection on $_GET methods
 if (isset($_GET)) {
     foreach ($_GET as $field => $value) {
-        $_GET[$filed] = mysql_real_escape_string($value);
+        $_GET[$filed] = addslashes($value);
         $flood_string .= $_GET[$filed];
     }
 }
@@ -77,7 +77,7 @@ if (isset($_GET)) {
 //Anti injection on $_SESSION methods (if you need)
 //if (isset($_SESSION)) {
 //    foreach($_SESSION as $field=>$value) {
-//        $_SESSION[$filed]=mysql_real_escape_string($value);
+//        $_SESSION[$filed]=addslashes($value);
 //    }
 //}
 
